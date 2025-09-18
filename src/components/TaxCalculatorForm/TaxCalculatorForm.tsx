@@ -80,9 +80,11 @@ export const TaxCalculatorForm: React.FC<TaxCalculatorFormProps> = ({ onSubmit, 
             error={!!errors.annualIncome}
             helperText={errors.annualIncome}
             placeholder="Enter your annual income"
-            inputProps={{
-              min: 0,
-              step: 0.01,
+            slotProps={{
+              htmlInput: {
+                min: 0,
+                step: 0.01,
+              },
             }}
             disabled={isLoading}
           />

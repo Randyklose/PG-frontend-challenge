@@ -17,7 +17,6 @@ A modern React TypeScript application that calculates Canadian income tax using 
 
 - **Frontend**: React 19, TypeScript, Vite
 - **UI Library**: Material-UI (MUI)
-- **Data Fetching**: SWR
 - **Testing**: Vitest, React Testing Library
 - **Styling**: Material-UI + CSS
 - **API**: Dockerized mock API server
@@ -32,7 +31,6 @@ src/
 │   ├── TaxCalculationResults.tsx  # Tax results display
 │   └── TaxCalculatorForm.tsx      # Main form component
 ├── hooks/              # Custom React hooks
-│   ├── useTaxBrackets.ts     # SWR hook for tax brackets
 │   └── useTaxCalculation.ts  # SWR hook for tax calculation
 ├── services/           # Business logic and external services
 │   ├── logger.ts            # Structured logging service
@@ -41,10 +39,6 @@ src/
 │   └── theme.ts
 ├── types/             # TypeScript type definitions
 │   └── tax.ts
-├── test/              # Test files
-│   ├── components/
-│   ├── hooks/
-│   └── *.test.ts
 └── App.tsx            # Main application component
 ```
 
@@ -57,7 +51,6 @@ src/
 
 ### Custom Hooks Pattern
 - `useTaxCalculation`: Manages tax calculation state with SWR
-- `useTaxBrackets`: Handles tax bracket data fetching
 - Separates data fetching logic from UI components
 
 ### Error Handling Strategy
@@ -67,7 +60,6 @@ src/
 - Manual retry options for users
 
 ### State Management
-- SWR for server state management
 - Local component state for form data
 - Centralized error and loading states
 
@@ -126,9 +118,6 @@ Run `npm run test:coverage` to generate a coverage report.
 
 ## 🔧 Configuration
 
-### Environment Variables
-- `VITE_API_BASE_URL` - Base URL for the tax API (default: `http://localhost:5001`)
-
 ### API Endpoints
 - `GET /tax-calculator/tax-year/{year}` - Fetch tax brackets for a given year
 - Supported years: 2019, 2020, 2021, 2022
@@ -184,7 +173,6 @@ Run `npm run test:coverage` to generate a coverage report.
 
 ### Performance
 - **Code Splitting**: Vite automatically splits code for optimal loading
-- **Caching**: SWR provides intelligent caching and revalidation
 - **Bundle Size**: Tree-shaking and dead code elimination
 
 ### Security
@@ -197,16 +185,6 @@ Run `npm run test:coverage` to generate a coverage report.
 - **Error Tracking**: Comprehensive error information for debugging
 - **Performance Metrics**: Built-in React DevTools support
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Make your changes and add tests
-4. Run tests: `npm test`
-5. Run linting: `npm run lint`
-6. Commit your changes: `git commit -am 'Add my feature'`
-7. Push to the branch: `git push origin feature/my-feature`
-8. Submit a pull request
 
 ## 📝 License
 

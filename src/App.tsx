@@ -1,10 +1,8 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Container, Box, Typography, Paper } from '@mui/material';
-import { TaxCalculatorForm } from './components/TaxCalculatorForm/TaxCalculatorForm';
-import { TaxCalculationResults } from './components/TaxCalculationResults/TaxCalculationResults';
-import { ErrorDisplay } from './components/ErrorDisplay';
-import { LoadingSpinner } from './components/LoadingSpinner';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { TaxCalculatorStateManager } from './components/TaxCalculatorStateManager';
 import { useTaxCalculation } from './hooks/useTaxCalculation/useTaxCalculation';
 import { TaxCalculationRequest } from './types/tax';
 import { theme } from './theme/theme';
@@ -46,74 +44,48 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ minHeight: '100vh', backgroundColor: 'background.default' }}>
-        <Container maxWidth="md" sx={{ py: 4 }}>
-          <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
+      <ErrorBoundary>
+        <Box sx={{ 
+          minHeight: '100vh',
+          width: '100vw',
+          backgroundColor: 'background.default',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          }}>
+          <Container maxWidth="lg" sx={{ py: 4 }}>
+            <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
             <Box textAlign="center" mb={4}>
-              <Typography variant="h1" component="h1" gutterBottom>
-                Tax Calculator
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                Calculate your income tax using Canadian marginal tax rates
-              </Typography>
-            </Box>
-
-            {appState === 'idle' && (
-              <TaxCalculatorForm 
-                onSubmit={handleTaxCalculation}
-                isLoading={false}
-              />
-            )}
-
-            {appState === 'loading' && (
-              <LoadingSpinner message="Calculating your tax..." />
-            )}
-
-            {appState === 'success' && result && lastRequest && (
-              <Box>
-                <TaxCalculationResults 
-                  result={result}
-                  annualIncome={lastRequest.annualIncome}
-                  taxYear={lastRequest.taxYear}
-                />
-                <Box textAlign="center" mt={3}>
-                  <button 
-                    onClick={handleNewCalculation}
-                    className="new-calculation-button"
-                  >
-                    Calculate Another Tax
-                  </button>
-                </Box>
+                <Typography variant="h1" component="h1" gutterBottom>
+                  Tax Calculator
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Calculate your income tax using Canadian marginal tax rates
+                </Typography>
               </Box>
-            )}
-
-            {appState === 'error' && error && (
-              <Box>
-                <ErrorDisplay 
+              <Box textAlign="center" mb={4}>
+                <TaxCalculatorStateManager
+                  appState={appState}
+                  result={result}
+                  lastRequest={lastRequest}
                   error={error}
+                  onSubmit={handleTaxCalculation}
+                  onNewCalculation={handleNewCalculation}
                   onRetry={handleRetry}
                 />
-                <Box textAlign="center" mt={3}>
-                  <button 
-                    onClick={handleNewCalculation}
-                    className="new-calculation-button"
-                  >
-                    Start Over
-                  </button>
-                </Box>
               </Box>
-            )}
-          </Paper>
+            </Paper>
 
-          <Box textAlign="center">
-            <Typography variant="body2" color="text.secondary">
-              This calculator uses the official Canadian tax brackets and rates.
-              <br />
-              API Server: <code>http://localhost:5001</code>
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
+            <Box textAlign="center">
+              <Typography variant="body2" color="text.secondary">
+                This calculator uses the official Canadian tax brackets and rates.
+                <br />
+                API Server: <code>http://localhost:5001</code>
+              </Typography>
+            </Box>
+          </Container>
+        </Box>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }

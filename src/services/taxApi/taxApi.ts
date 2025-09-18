@@ -175,7 +175,6 @@ class TaxApiService {
       taxPerBracket,
     };
 
-    console.log('Tax calculation completed:', result);
     return result;
   }
 }
