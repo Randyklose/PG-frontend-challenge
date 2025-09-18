@@ -7,11 +7,12 @@ import {
   Select,
   MenuItem,
   Button,
-  Alert,
   Grid,
   Typography,
 } from '@mui/material';
 import { TaxCalculationRequest } from '../../types/tax';
+
+const validYears = [2019, 2020, 2021, 2022];
 
 interface TaxCalculatorFormProps {
   onSubmit: (request: TaxCalculationRequest) => void;
@@ -34,7 +35,6 @@ export const TaxCalculatorForm: React.FC<TaxCalculatorFormProps> = ({ onSubmit, 
     }
 
     // Validate tax year
-    const validYears = [2019, 2020, 2021, 2022];
     if (!validYears.includes(formData.taxYear)) {
       newErrors.taxYear = 'Tax year must be 2019, 2020, 2021, or 2022';
     }
@@ -83,7 +83,7 @@ export const TaxCalculatorForm: React.FC<TaxCalculatorFormProps> = ({ onSubmit, 
             slotProps={{
               htmlInput: {
                 min: 0,
-                step: 0.01,
+                step: 1,
               },
             }}
             disabled={isLoading}
@@ -101,10 +101,11 @@ export const TaxCalculatorForm: React.FC<TaxCalculatorFormProps> = ({ onSubmit, 
               label="Tax Year"
               disabled={isLoading}
             >
-              <MenuItem value={2019}>2019</MenuItem>
-              <MenuItem value={2020}>2020</MenuItem>
-              <MenuItem value={2021}>2021</MenuItem>
-              <MenuItem value={2022}>2022</MenuItem>
+              {validYears.map(year => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
             </Select>
             {errors.taxYear && (
               <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.75 }}>
