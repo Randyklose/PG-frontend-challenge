@@ -203,3 +203,4 @@ This project is part of a technical interview challenge.
 - **Dark Mode**: Theme switching capability
 - **Progressive Web App**: Offline functionality
 - **Internationalization**: Multi-language support
+- **Visual Regression testing**: Add Storybook support
