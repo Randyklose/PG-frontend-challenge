@@ -1,70 +1,227 @@
-# React + TypeScript + Vite
+# Tax Calculator Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React TypeScript application that calculates Canadian income tax using marginal tax rates. Built as a technical interview challenge with production-ready patterns and comprehensive testing.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Tax Calculation**: Calculate total income tax, effective tax rate, and breakdown by tax brackets
+- **Modern UI**: Clean, responsive interface built with Material-UI
+- **Data Fetching**: Efficient data fetching with SWR for caching and revalidation
+- **Error Handling**: Comprehensive error handling with retry mechanisms
+- **Form Validation**: Real-time form validation with user-friendly error messages
+- **Logging**: Structured logging for debugging and monitoring
+- **Testing**: Comprehensive unit and integration tests
+- **TypeScript**: Full type safety throughout the application
 
-## Expanding the ESLint configuration
+## 🛠 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend**: React 19, TypeScript, Vite
+- **UI Library**: Material-UI (MUI)
+- **Data Fetching**: SWR
+- **Testing**: Vitest, React Testing Library
+- **Styling**: Material-UI + CSS
+- **API**: Dockerized mock API server
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📦 Project Structure
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── components/          # React components
+│   ├── ErrorDisplay.tsx      # Error display with retry functionality
+│   ├── LoadingSpinner.tsx    # Loading indicator
+│   ├── TaxCalculationResults.tsx  # Tax results display
+│   └── TaxCalculatorForm.tsx      # Main form component
+├── hooks/              # Custom React hooks
+│   ├── useTaxBrackets.ts     # SWR hook for tax brackets
+│   └── useTaxCalculation.ts  # SWR hook for tax calculation
+├── services/           # Business logic and external services
+│   ├── logger.ts            # Structured logging service
+│   └── taxApi.ts           # Tax API service with retry logic
+├── theme/             # Material-UI theme configuration
+│   └── theme.ts
+├── types/             # TypeScript type definitions
+│   └── tax.ts
+├── test/              # Test files
+│   ├── components/
+│   ├── hooks/
+│   └── *.test.ts
+└── App.tsx            # Main application component
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏗 Architecture & Design Patterns
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Service Layer Pattern
+- `TaxApiService`: Encapsulates all API communication
+- Retry logic with exponential backoff
+- Custom error types for better error handling
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Custom Hooks Pattern
+- `useTaxCalculation`: Manages tax calculation state with SWR
+- `useTaxBrackets`: Handles tax bracket data fetching
+- Separates data fetching logic from UI components
+
+### Error Handling Strategy
+- Custom `TaxApiError` class with retry information
+- User-friendly error messages
+- Automatic retry for transient errors
+- Manual retry options for users
+
+### State Management
+- SWR for server state management
+- Local component state for form data
+- Centralized error and loading states
+
+## 🚦 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- Docker (for the API server)
+
+### Installation
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Start the API server**:
+   ```bash
+   docker run --init -p 5001:5001 -it ptsdocker16/interview-test-server
+   ```
+
+3. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser** to `http://localhost:5173`
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm test` - Run tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage
+
+## 🧪 Testing
+
+The application includes comprehensive testing:
+
+### Unit Tests
+- Component rendering and interaction
+- Custom hooks functionality
+- API service error handling
+- Form validation logic
+
+### Integration Tests
+- Complete user workflows
+- API integration with mock server
+- Error boundary testing
+
+### Test Coverage
+Run `npm run test:coverage` to generate a coverage report.
+
+## 🔧 Configuration
+
+### Environment Variables
+- `VITE_API_BASE_URL` - Base URL for the tax API (default: `http://localhost:5001`)
+
+### API Endpoints
+- `GET /tax-calculator/tax-year/{year}` - Fetch tax brackets for a given year
+- Supported years: 2019, 2020, 2021, 2022
+
+## 📊 API Response Format
+
+### Tax Brackets Response
+```typescript
+{
+  tax_brackets: [
+    {
+      min: number,      // Minimum income for bracket
+      max?: number,     // Maximum income for bracket (optional for highest bracket)
+      rate: number      // Tax rate as decimal (e.g., 0.15 for 15%)
+    }
+  ]
+}
 ```
-# PG-frontend-challenge
+
+### Error Response
+```typescript
+{
+  message: string,    // Error description
+  code?: string,      // Error code
+  status?: number     // HTTP status code
+}
+```
+
+## 🎨 UI/UX Features
+
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
+- **Loading States**: Clear feedback during API calls
+- **Error States**: User-friendly error messages with retry options
+- **Form Validation**: Real-time validation with helpful error messages
+- **Currency Formatting**: Canadian dollar formatting for all monetary values
+
+## 🔒 Error Handling
+
+### Error Types
+- **Network Errors**: Connection issues, timeouts
+- **Validation Errors**: Invalid input data
+- **API Errors**: Server errors, unsupported tax years
+- **Application Errors**: Unexpected runtime errors
+
+### Retry Strategy
+- Automatic retry for transient errors (network, server errors)
+- Exponential backoff to prevent overwhelming the server
+- Manual retry options for users
+- Maximum retry limits to prevent infinite loops
+
+## 🚀 Production Considerations
+
+### Performance
+- **Code Splitting**: Vite automatically splits code for optimal loading
+- **Caching**: SWR provides intelligent caching and revalidation
+- **Bundle Size**: Tree-shaking and dead code elimination
+
+### Security
+- **Input Validation**: Client and server-side validation
+- **XSS Prevention**: React's built-in XSS protection
+- **Type Safety**: TypeScript prevents many runtime errors
+
+### Monitoring
+- **Structured Logging**: JSON-formatted logs for easy parsing
+- **Error Tracking**: Comprehensive error information for debugging
+- **Performance Metrics**: Built-in React DevTools support
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Make your changes and add tests
+4. Run tests: `npm test`
+5. Run linting: `npm run lint`
+6. Commit your changes: `git commit -am 'Add my feature'`
+7. Push to the branch: `git push origin feature/my-feature`
+8. Submit a pull request
+
+## 📝 License
+
+This project is part of a technical interview challenge.
+
+## 🐛 Known Issues
+
+- Some test cases may fail due to timing issues with the mock API
+- The application requires the Docker API server to be running
+
+## 🔮 Future Enhancements
+
+- **Multiple Tax Jurisdictions**: Support for provincial tax calculations
+- **Tax Planning**: Year-over-year comparison tools
+- **Export Features**: PDF export of tax calculations
+- **Dark Mode**: Theme switching capability
+- **Progressive Web App**: Offline functionality
+- **Internationalization**: Multi-language support
