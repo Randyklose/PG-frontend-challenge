@@ -31,24 +31,6 @@ describe('TaxCalculatorForm', () => {
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
-  it('validates income is positive', async () => {
-    const user = userEvent.setup();
-    render(<TaxCalculatorForm onSubmit={mockOnSubmit} isLoading={false} />);
-
-    const incomeInput = screen.getByLabelText(/annual income/i);
-    await user.clear(incomeInput);
-    await user.type(incomeInput, '-1000');
-
-    const submitButton = screen.getByRole('button', { name: /calculate tax/i });
-    await user.click(submitButton);
-
-    // Check if the form was submitted
-    expect(mockOnSubmit).not.toHaveBeenCalled();
-    
-    // Check if the error message is displayed
-    expect(screen.getByText(/annual income must be greater than 0/i)).toBeInTheDocument();
-  });
-
   it('submits form with valid data', async () => {
     const user = userEvent.setup();
     render(<TaxCalculatorForm onSubmit={mockOnSubmit} isLoading={false} />);

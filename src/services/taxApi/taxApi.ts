@@ -53,19 +53,20 @@ class TaxApiService {
 
       clearTimeout(timeoutId);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const isRetryable = response.status >= 500 || response.status === 429;
+      if (!response?.ok) {
+        const errorData = await response?.json().catch(() => ({}));
+        const resStatus = response?.status;
+        const isRetryable = resStatus >= 500 || resStatus === 429;
         
         throw new TaxApiError(
-          errorData.message || `HTTP ${response.status}: ${response.statusText}`,
-          response.status,
-          errorData.code,
+          errorData?.message || `HTTP ${resStatus}: ${response?.statusText}`,
+          resStatus,
+          errorData?.code,
           isRetryable
         );
       }
 
-      return await response.json();
+      return await response?.json();
     } catch (error) {
       clearTimeout(timeoutId);
 
